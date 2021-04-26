@@ -1,25 +1,49 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-const storedJwt = localStorage.getItem("token");
-
-const AuthAxios = axios.create({
-  headers: {
-    Authorization: `Bearer ${storedJwt}`,
-  },
-});
+// const AuthAxios = axios.create({
+//   headers: {
+//     Authorization: `Bearer ${storedJwt}`,
+//   },
+// });
 
 export default function ProtectedView() {
+  const storedJwt = localStorage.getItem("token");
+  const refreshJwt = localStorage.getItem("token-refresh");
   const [data, setData] = useState({});
+  const [token, setToken] = useState(storedJwt);
+  const refreshToken = async () => {
+    await axios({
+      method: "post",
+      url: "api/token-refresh/",
+      data: { refresh: refreshJwt },
+    }).then(
+      (response) => {
+        console.log(response);
+        localStorage.setItem("token", response.data.access);
+        setToken(response.data.access);
+        console.log("access: " + localStorage.getItem("token"));
+        console.log("refresh: " + localStorage.getItem("token-refresh"));
+      },
+      (error) => {
+        console.log(error.message);
+      }
+    );
+  };
 
   const fecthData = async () => {
-    const data = await AuthAxios("/tod/todos/").then(
+    await axios({
+      method: "get",
+      url: "tod/todos/",
+      headers: { Authorization: `Bearer ${token}` },
+    }).then(
       (response) => {
         setData(...response.data);
         console.log(response.data);
       },
       (error) => {
         console.log(error);
+        refreshToken();
       }
     );
   };

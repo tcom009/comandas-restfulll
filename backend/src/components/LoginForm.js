@@ -25,9 +25,11 @@ export default function LoginForm() {
         //setData({ ...response });
         console.log(response);
         localStorage.setItem("token", response.data.access);
+        localStorage.setItem("token-refresh", response.data.refresh);
         setIsLogedIn(true);
         setIsLoading(false);
-        console.log(localStorage.getItem("token"));
+        console.log("access: " + localStorage.getItem("token"));
+        console.log("refresh: " + localStorage.getItem("token-refresh"));
         setLogedUser(username);
         //setUsername(response.username);
       },
