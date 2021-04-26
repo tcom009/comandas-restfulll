@@ -22,7 +22,6 @@ export default function LoginForm() {
       data: { username: username, password: password },
     }).then(
       (response) => {
-        //setData({ ...response });
         console.log(response);
         localStorage.setItem("token", response.data.access);
         localStorage.setItem("token-refresh", response.data.refresh);
