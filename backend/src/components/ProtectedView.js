@@ -22,7 +22,7 @@ export default function ProtectedView() {
       }
     );
   });
-
+  //here is the issue!!!
   axiosInstance.interceptors.response.use(
     (res) => {
       return res;
